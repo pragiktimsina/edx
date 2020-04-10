@@ -1,3 +1,4 @@
+#include <cs50.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -19,10 +20,10 @@ candidate candidates[MAX];
 int candidate_count;
 
 // Function prototypes
-bool vote(char name);
+bool vote(string name);
 void print_winner(void);
 
-int main(int argc, char** argv)
+int main(int argc, string argv[])
 {
     // Check for invalid usage
     if (argc < 2)
@@ -44,14 +45,12 @@ int main(int argc, char** argv)
         candidates[i].votes = 0;
     }
 
-    printf("Number of Voters:")
-    scanf("%d",&voter_count);
+    int voter_count = get_int("Number of voters: ");
 
     // Loop over all voters
     for (int i = 0; i < voter_count; i++)
     {
-       printf("Vote:");
-       scanf("%s",&candidates[i].name);
+        string name = get_string("Vote: ");
 
         // Check for invalid vote
         if (!vote(name))
@@ -67,13 +66,14 @@ int main(int argc, char** argv)
 // Update vote totals given a new vote
 bool vote(string name)
 {
-   for(int i=0;i<MAX;i++)
+    for (int i = 0; i < candidate_count; i++)
     {
-        if(strcmp(candidates[i].name,name)==0)
+        if (strcmp(candidates[i].name, name) == 0)
         {
             candidates[i].votes++;
             return true;
         }
+
     }
     return false;
 }
@@ -81,10 +81,20 @@ bool vote(string name)
 // Print the winner (or winners) of the election
 void print_winner(void)
 {
+    int maxvote = 0;
+    for (int i = 0; i < candidate_count; i++)
+    {
+        if (candidates[i].votes > maxvote)
+        {
+            maxvote = candidates[i].votes;
+        }
+    }
 
-   for(int i=0;i<MAX;i++)
-   {
-       printf("\n%s %d",candidates[i].name,candidates[i].votes);
-   }
-    return;
+    for (int i = 0; i < candidate_count; i++)
+    {
+        if (candidates[i].votes == maxvote)
+        {
+            printf("%s\n", candidates[i].name);
+        }
+    }
 }
